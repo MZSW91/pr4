@@ -1,241 +1,495 @@
-<title>Verification Portal</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TÜV SÜD </title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
 <style>
-  /* Layout: one RTL page, two views. Portal (hero + lookup -> result card) is the default; Entry (form | records) opens only for editors via #entry. Shared dark-first palette with light variant. */
-  :root {
+/* ================= LOOKUP PAGE: identical to preview.html ================= */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    background: #fff;
+    font-family: Arial, sans-serif;
+    color: #263238;
+    text-align: center;
+    position: relative;
+}
+
+[hidden] { display: none !important; }
+
+.sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.top-bar {
+    height: 47px;
+    width: 100%;
+    background: #243d87;
+}
+
+.logo-container {
+    width: 85px;
+    height: 85px;
+    margin: -32px auto 15px;
+    background: white;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.logo-placeholder {
+    width: 60px;
+    height: 60px;
+    border: 3px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    overflow: hidden;
+    flex: none;
+}
+
+.logo-placeholder svg {
+    width: 42px;
+    height: 42px;
+}
+
+.logo-placeholder.filled {
+    width: 72px;
+    height: 72px;
+    border: 0;
+    border-radius: 0;
+}
+
+.logo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+h1 {
+    font-family: Arial, sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 15px auto 65px;
+    line-height: 1.4;
+    color: #292929;
+    direction: rtl;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 413px;
+    margin: 0 auto;
+    padding: 0 0 30px;
+}
+
+.form-title {
+    font-family: Georgia, serif;
+    font-size: 30px;
+    line-height: 1.2;
+    margin-bottom: 36px;
+}
+
+input {
+    width: 100%;
+    height: 49px;
+    border: 1px solid #d3d3d3;
+    border-radius: 6px;
+    padding: 0 15px;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    margin-bottom: 24px;
+}
+
+input:focus {
+    border-color: #243d87;
+    box-shadow: 0 0 4px rgba(36,61,135,0.3);
+}
+
+input::placeholder {
+    color: #999;
+}
+
+.captcha-label {
+    font-size: 16px;
+    margin-bottom: 17px;
+}
+
+.captcha-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+#captcha {
+    display: block;
+    width: 300px;
+    max-width: calc(100% - 35px);
+    height: 59px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.captcha-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.captcha-buttons button {
+    width: 27px;
+    height: 27px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+}
+
+.captcha-buttons button:hover {
+    background: #f4f4f4;
+}
+
+@media (pointer: coarse) {
+    .captcha-buttons button { position: relative; }
+    .captcha-buttons button::after { content: ""; position: absolute; inset: -2px -9px; }
+}
+
+.captcha-buttons button svg {
+    width: 15px;
+    height: 15px;
+}
+
+#captcha-input {
+    margin-bottom: 19px;
+}
+
+.submit-btn {
+    width: 100%;
+    height: 49px;
+    border: none;
+    border-radius: 6px;
+    background: #4078ed;
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.submit-btn:hover {
+    background: #315fc5;
+}
+
+.submit-btn:disabled { opacity: .7; cursor: default; }
+
+.msg { font-size: 14px; color: #b53a3a; margin-top: 12px; }
+.msg:empty { display: none; }
+
+.captcha-buttons button:focus-visible, .submit-btn:focus-visible { outline: 2px solid #243d87; outline-offset: 2px; }
+
+@media (max-width: 360px) {
+    input::placeholder {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 500px) {
+    .form-container {
+        width: 90%;
+    }
+
+    h1 {
+        font-size: 30px;
+        margin-bottom: 55px;
+    }
+
+    .form-title {
+        font-size: 25px;
+    }
+}
+
+/* ================= INNER RESULT PAGE: original design ================= */
+/* Layout: when a result is shown the page switches to "result-mode": the preview header is hidden and the original dark-first page (with light variant) takes over. */
+body.result-mode {
     --bg: #070d17; --surface: #101a2b; --surface-2: #162236; --band: #14232f; --band-warn: #2d2616; --line: #1f2d44;
     --fg: #f4f7fb; --muted: #7d8aa3; --accent: #8db8ff; --accent-ink: #07111e;
     --ok: #5fd0a5; --ok-bg: #1d4a45; --warn: #e9b44c; --warn-bg: #4a3a16; --bad: #f08a8a; --bad-bg: #4a2323;
     --font-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
     --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-    color-scheme: dark;
-  }
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --bg: #eef2f8; --surface: #ffffff; --surface-2: #f3f6fb; --band: #e7f5ef; --band-warn: #fbf1dc; --line: #d6deea;
-      --fg: #0d1626; --muted: #62708a; --accent: #2a5fc4; --accent-ink: #ffffff;
-      --ok: #17805c; --ok-bg: #cdeedf; --warn: #9a6a00; --warn-bg: #f6e2b0; --bad: #b53a3a; --bad-bg: #f7d9d9;
-      color-scheme: light;
-    }
-  }
-  :root[data-theme="light"] {
-    --bg: #eef2f8; --surface: #ffffff; --surface-2: #f3f6fb; --band: #e7f5ef; --band-warn: #fbf1dc; --line: #d6deea;
-    --fg: #0d1626; --muted: #62708a; --accent: #2a5fc4; --accent-ink: #ffffff;
-    --ok: #17805c; --ok-bg: #cdeedf; --warn: #9a6a00; --warn-bg: #f6e2b0; --bad: #b53a3a; --bad-bg: #f7d9d9;
-    color-scheme: light;
-  }
-
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--fg);
-    font-family: var(--font-ui); font-size: 15px; line-height: 1.5;
+    background: var(--bg); color: var(--fg);
+    font-family: var(--font-ui); font-size: 15px; line-height: 1.5; text-align: start;
     padding-block: 20px 72px;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
-  }
-  .wrap { max-width: 1100px; margin-inline: auto; }
-  [hidden] { display: none !important; }
-  button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) body.result-mode {
+        --bg: #eef2f8; --surface: #ffffff; --surface-2: #f3f6fb; --band: #e7f5ef; --band-warn: #fbf1dc; --line: #d6deea;
+        --fg: #0d1626; --muted: #62708a; --accent: #2a5fc4; --accent-ink: #ffffff;
+        --ok: #17805c; --ok-bg: #cdeedf; --warn: #9a6a00; --warn-bg: #f6e2b0; --bad: #b53a3a; --bad-bg: #f7d9d9;
+    }
+}
+:root[data-theme="light"] body.result-mode {
+    --bg: #eef2f8; --surface: #ffffff; --surface-2: #f3f6fb; --band: #e7f5ef; --band-warn: #fbf1dc; --line: #d6deea;
+    --fg: #0d1626; --muted: #62708a; --accent: #2a5fc4; --accent-ink: #ffffff;
+    --ok: #17805c; --ok-bg: #cdeedf; --warn: #9a6a00; --warn-bg: #f6e2b0; --bad: #b53a3a; --bad-bg: #f7d9d9;
+}
+body.result-mode .top-bar, body.result-mode .logo-container, body.result-mode > h1 { display: none; }
 
-  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 48px; flex-wrap: wrap; }
-  .brand { display: flex; align-items: center; gap: 14px; }
-  .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-  .brand-name { font-weight: 700; font-size: 14px; }
-  .brand-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: .28em; color: var(--muted); text-transform: uppercase; }
-  .logo-slot { width: 52px; height: 52px; border-radius: 14px; border: 1.5px dashed var(--muted); background: var(--surface); color: var(--muted); display: grid; place-items: center; overflow: hidden; font-size: 10px; text-align: center; line-height: 1.2; flex: none; }
-  .logo-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .logo-slot.filled { border-style: solid; border-color: var(--line); background: #fff; }
-  nav { display: flex; gap: 8px; }
-  .tab { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; font: inherit; font-size: 13px; cursor: pointer; }
-  .tab:hover, .tab[aria-current="page"] { color: var(--fg); border-color: var(--accent); }
+#portal-result { max-width: 1100px; margin-inline: auto; text-align: start; }
+#portal-result button:focus-visible, .theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  .eyebrow { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .3em; color: var(--accent); font-weight: 500; }
-  h1 { font-size: clamp(32px, 6vw, 54px); font-weight: 700; margin: 10px 0 6px; line-height: 1.15; text-wrap: balance; }
-  .lead { color: var(--muted); max-width: 56ch; margin: 8px 0 0; font-size: 16px; }
-  .ref { color: var(--muted); font-size: 13px; }
-  .ref code { font-family: var(--font-mono); color: var(--fg); direction: ltr; unicode-bidi: isolate; }
-  .head-block { margin-bottom: 36px; }
+#portal-result header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 48px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name { font-weight: 700; font-size: 14px; }
+.brand-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: .28em; color: var(--muted); text-transform: uppercase; }
+.logo-slot { width: 52px; height: 52px; border-radius: 14px; border: 1.5px dashed var(--muted); background: var(--surface); color: var(--muted); display: grid; place-items: center; overflow: hidden; font-size: 10px; text-align: center; line-height: 1.2; flex: none; }
+.logo-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.logo-slot.filled { border-style: solid; border-color: var(--line); background: #fff; }
 
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 28px; overflow: hidden; min-width: 0; }
-  .card-h { padding: 18px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .card-h h2 { margin: 0; font-size: 17px; font-weight: 600; }
-  .card-b { padding: 24px; }
-  .label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-  .note { font-size: 12px; color: var(--muted); }
+.eyebrow { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .3em; color: var(--accent); font-weight: 500; }
+#portal-result h1 { font-family: inherit; direction: inherit; color: inherit; font-size: clamp(32px, 6vw, 54px); font-weight: 700; margin: 10px 0 6px; line-height: 1.15; text-wrap: balance; }
+.ref { color: var(--muted); font-size: 13px; }
+.ref code { font-family: var(--font-mono); color: var(--fg); direction: ltr; unicode-bidi: isolate; }
+.head-block { margin-bottom: 36px; }
 
-  input[type=text], input[type=date] { width: 100%; background: var(--surface-2); color: var(--fg); border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; font: inherit; font-size: 14px; min-width: 0; }
-  input[readonly] { color: var(--muted); }
-  .ltr { direction: ltr; text-align: left; font-family: var(--font-mono); font-size: 13px; }
-  label.l { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  .btn { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 12px; padding: 0 22px; min-height: 44px; font: inherit; font-weight: 600; font-size: 14px; cursor: pointer; }
-  .btn:hover { filter: brightness(1.08); }
-  .btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); font-weight: 500; }
-  .btn.ghost:hover { border-color: var(--accent); color: var(--accent); filter: none; }
-  .btn.sm { min-height: 34px; padding: 0 14px; font-size: 13px; border-radius: 10px; }
-  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 28px; overflow: hidden; min-width: 0; }
+.label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
 
-  /* portal */
-  .lookup { padding: 32px; display: flex; flex-direction: column; gap: 14px; }
-  .field { display: flex; gap: 12px; flex-wrap: wrap; }
-  .field input { flex: 1 1 260px; padding: 15px 18px; font-size: 16px; border-radius: 14px; direction: ltr; text-align: left; font-family: var(--font-mono); letter-spacing: .03em; }
-  .field .btn { padding: 0 32px; min-height: 52px; border-radius: 14px; font-size: 15px; }
-  .msg { font-size: 13px; color: var(--bad); min-height: 20px; }
+#again-btn { position: fixed; top: 28px; left: max(24px, env(safe-area-inset-left, 0px)); z-index: 20; background: transparent; color: var(--accent); border: 0; border-radius: 0; padding: 8px 0; min-height: auto; font: inherit; font-size: 13px; font-weight: 400; cursor: pointer; }
+#again-btn:hover { color: var(--fg); }
+#again-btn::after { content: " →"; font-size: 16px; margin-inline-start: 6px; }
 
-  /* result */
-  .status { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 24px 32px; background: var(--band); border-bottom: 1px solid var(--line); }
-  .status.warn { background: var(--band-warn); }
-  .status-main { display: flex; align-items: center; gap: 18px; min-width: 0; }
-  .badge { width: 48px; height: 48px; border-radius: 14px; background: var(--ok-bg); display: grid; place-items: center; color: var(--ok); flex: none; }
-  .status.warn .badge { background: var(--warn-bg); color: var(--warn); }
-  .status.bad .badge { background: var(--bad-bg); color: var(--bad); }
-  .status h2 { margin: 0; font-size: 20px; font-weight: 600; }
-  .status p { margin: 0; color: var(--muted); font-size: 13px; }
-  .chip { font-family: var(--font-mono); font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px; direction: ltr; background: var(--surface); overflow-wrap: anywhere; }
-  .body { padding: 32px; display: flex; flex-direction: column; gap: 28px; }
-  .issuer { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
-  .issuer .val { font-weight: 600; font-size: 17px; }
-  .issuer svg { color: var(--accent); flex: none; margin-top: 8px; }
-  .subject { background: var(--surface-2); border: 1px solid var(--line); border-radius: 18px; padding: 24px 28px; }
-  .subject .big { font-size: 28px; font-weight: 700; margin: 2px 0 6px; line-height: 1.2; }
-  .subject .small { color: var(--muted); font-size: 13px; }
-  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px; }
-  .grid .val, .pair .val { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
-  .mono { font-family: var(--font-mono); font-size: 14px; font-weight: 500; direction: ltr; unicode-bidi: isolate; display: inline-block; }
-  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 32px; padding-top: 28px; border-top: 1px solid var(--line); }
-  .notfound { padding: 32px; color: var(--muted); }
+.status { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 24px 32px; background: var(--band); border-bottom: 1px solid var(--line); }
+.status.warn { background: var(--band-warn); }
+.status-main { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.badge { width: 48px; height: 48px; border-radius: 14px; background: var(--ok-bg); display: grid; place-items: center; color: var(--ok); flex: none; }
+.status.warn .badge { background: var(--warn-bg); color: var(--warn); }
+.status.bad .badge { background: var(--bad-bg); color: var(--bad); }
+.status h2 { margin: 0; font-size: 20px; font-weight: 600; }
+.status p { margin: 0; color: var(--muted); font-size: 13px; }
+.chip { font-family: var(--font-mono); font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px; direction: ltr; background: var(--surface); overflow-wrap: anywhere; }
+.body { padding: 32px; display: flex; flex-direction: column; gap: 28px; }
+.issuer { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.issuer .val { font-weight: 600; font-size: 17px; }
+.issuer svg { color: var(--accent); flex: none; margin-top: 8px; }
+.subject { background: var(--surface-2); border: 1px solid var(--line); border-radius: 18px; padding: 24px 28px; }
+.subject .big { font-size: 28px; font-weight: 700; margin: 2px 0 6px; line-height: 1.2; }
+.subject .small { color: var(--muted); font-size: 13px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px; }
+.grid .val, .pair .val { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
+.mono { font-family: var(--font-mono); font-size: 14px; font-weight: 500; direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 32px; padding-top: 28px; border-top: 1px solid var(--line); }
+.notfound { padding: 32px; color: var(--muted); }
 
-  /* entry */
-  .cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
-  .stack { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
-  form { display: flex; flex-direction: column; gap: 24px; }
-  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
-  legend { font-size: 12px; color: var(--accent); font-family: var(--font-mono); letter-spacing: .12em; padding: 0; margin-bottom: 14px; }
-  .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-  .full { grid-column: 1 / -1; }
-  .row { display: flex; gap: 8px; }
-  .row input { flex: 1; }
-  .rec { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
-  .rec:first-child { border-top: 0; padding-top: 0; }
-  .rec-main { min-width: 0; flex: 1 1 200px; }
-  .rec-ref { font-family: var(--font-mono); font-size: 13px; direction: ltr; text-align: right; overflow-wrap: anywhere; }
-  .rec-sub { font-size: 12px; color: var(--muted); }
-  .pill { font-size: 11px; padding: 2px 10px; border-radius: 999px; background: var(--ok-bg); color: var(--ok); }
-  .pill.warn { background: var(--warn-bg); color: var(--warn); }
-  .empty { color: var(--muted); font-size: 14px; margin: 0; }
-  .toast { color: var(--ok); font-size: 13px; min-height: 20px; }
-  .denied { padding: 40px 32px; text-align: center; color: var(--muted); }
+.theme-btn { display: none; position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 12px; cursor: pointer; }
+body.result-mode .theme-btn { display: block; }
 
-  .theme-btn { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 12px; cursor: pointer; }
-  /* Return to the verification portal: fixed at the top-left, like the reference image. */
-  #again-btn { position: fixed; top: 28px; left: max(24px, env(safe-area-inset-left, 0px)); z-index: 20; background: transparent; color: var(--accent); border: 0; border-radius: 0; padding: 8px 0; min-height: auto; font-size: 13px; font-weight: 400; }
-  #again-btn:hover { color: var(--fg); border: 0; filter: none; }
-  #again-btn::after { content: " →"; font-size: 16px; margin-inline-start: 6px; }
-
-  @media (max-width: 900px) { .cols { grid-template-columns: minmax(0, 1fr); } }
-  @media (max-width: 720px) {
-    header { margin-bottom: 32px; }
-    .status, .body, .lookup { padding: 20px; }
+@media (max-width: 720px) {
+    #portal-result header { margin-bottom: 32px; }
+    #again-btn { position: static; display: inline-flex; align-items: center; min-height: 44px; padding: 0; }
+    .card { border-radius: 20px; }
+    .status, .body { padding: 20px; }
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 20px; }
     .pair { gap: 22px 20px; }
     .subject { padding: 20px; } .subject .big { font-size: 24px; }
-    .field .btn { width: 100%; }
-  }
-  @media (max-width: 520px) { .fields { grid-template-columns: minmax(0, 1fr); } .card-b { padding: 18px; } }
-  @media (max-width: 420px) { .grid, .pair { grid-template-columns: minmax(0, 1fr); } }
+}
+@media (max-width: 420px) { .grid, .pair { grid-template-columns: minmax(0, 1fr); } }
 </style>
+</head>
+<body>
 
-<div class="wrap" dir="rtl" lang="ar">
+<div class="top-bar"></div>
+
+<!-- Logo Placeholder -->
+<div class="logo-container">
+    <div class="logo-placeholder" id="logo-slot" role="img" aria-label="الشعار">
+        <svg viewBox="0 0 48 48" fill="none"
+             stroke="currentColor" stroke-width="3" aria-hidden="true">
+            <rect x="5" y="5" width="38" height="38" rx="3"/>
+            <circle cx="17" cy="16" r="4" fill="currentColor"/>
+            <path d="M7 36 L19 23 L26 31 L32 24 L42 36"
+                  fill="currentColor"/>
+        </svg>
+    </div>
+</div>
+
+<!-- Company Name -->
+<h1>TÜV SÜD MIDDLE EAST  </h1>
+
+<main id="view-portal">
+
+<!-- LOOKUP -->
+<div id="portal-lookup">
+<div class="form-container">
+
+    <div class="form-title">
+        Please Enter Report / Certificate<br>
+        / ID<br>
+        Card Number
+    </div>
+
+    <form id="lookup-form" autocomplete="off">
+
+        <label class="sr-only" for="certificate">Certificate or ID card number</label>
+        <input
+            type="text"
+            id="certificate"
+            placeholder="CERTIFICATE OR ID CARD NUMBER"
+            spellcheck="false"
+            autocapitalize="characters"
+            autocorrect="off"
+            enterkeyhint="next"
+            required
+        >
+
+        <div class="captcha-label">
+            Retype the characters from the picture:
+        </div>
+
+        <div class="captcha-area">
+
+            <canvas id="captcha" role="img" aria-label="Verification code"></canvas>
+
+            <div class="captcha-buttons">
+                <button type="button" id="captcha-refresh"
+                        title="Refresh" aria-label="Refresh">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                </button>
+
+                <button type="button" id="captcha-speak"
+                        title="Audio" aria-label="Audio">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+
+        <label class="sr-only" for="captcha-input">Verification code</label>
+        <input
+            type="text"
+            id="captcha-input"
+            autocomplete="off"
+            spellcheck="false"
+            autocapitalize="characters"
+            autocorrect="off"
+            enterkeyhint="go"
+            required
+        >
+
+        <button type="submit" class="submit-btn" id="lookup-btn">
+            Submit!
+        </button>
+
+        <div class="msg" id="lookup-msg" role="alert" dir="rtl" lang="ar"></div>
+
+    </form>
+</div>
+</div>
+
+<!-- RESULT (original inner page) -->
+<div id="portal-result" class="wrap" dir="rtl" lang="ar" hidden>
   <header>
     <div class="brand">
-      <div class="logo-slot" id="logo-slot" role="img" aria-label="الشعار">شعارك<br>هنا</div>
+      <div class="logo-slot" id="logo-slot-result" role="img" aria-label="الشعار">شعارك<br>هنا</div>
       <div class="brand-text">
-        <span class="brand-name">TÜV SÜD</span>
+        <span class="brand-name">TÜV SÜD </span>
         <span class="brand-sub">Verification</span>
       </div>
     </div>
   </header>
 
-  <!-- PORTAL -->
-  <main id="view-portal">
-    <div id="portal-lookup">
-      <div class="head-block">
-        <div class="eyebrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
-          <span>CERTIFICATE VERIFICATION</span>
-        </div>
-        <h1>بوابة التحقق</h1>
-        <p class="lead">أدخل رقم المرجع المطبوع على الشهادة أو الموجود في رمز QR للتأكد من صحتها.</p>
-      </div>
-      <section class="card lookup" aria-label="البحث عن شهادة">
-        <form id="lookup-form" autocomplete="off">
-          <label class="l" for="ref-input">رقم المرجع</label>
-          <div class="field">
-            <input id="ref-input" type="text" placeholder="XXX-0000-00000" spellcheck="false">
-            <button type="submit" class="btn" id="lookup-btn">تحقق</button>
-          </div>
-          <div class="msg" id="lookup-msg" role="alert"></div>
-        </form>
-      </section>
+  <div class="head-block">
+    <div class="eyebrow">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+      <span>QR VERIFICATION</span>
     </div>
+    <h1>نتيجة التحقق</h1>
+    <div class="ref">رقم المرجع: <code id="r-ref-top"></code></div>
+    <div style="margin-top:14px"><button type="button" id="again-btn">بوابة التحقق</button></div>
+  </div>
 
-    <div id="portal-result" hidden>
-      <div class="head-block">
-        <div class="eyebrow">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
-          <span>QR VERIFICATION</span>
-        </div>
-        <h1>نتيجة التحقق</h1>
-        <div class="ref">رقم المرجع: <code id="r-ref-top"></code></div>
-        <div style="margin-top:14px"><button type="button" class="btn ghost sm" id="again-btn">بوابة التحقق</button></div>
-      </div>
-
-      <section class="card" id="result-found" aria-label="نتيجة التحقق">
-        <div class="status" id="r-status">
-          <div class="status-main"><div class="badge" id="r-badge"></div><div><h2 id="r-title"></h2><p id="r-sub"></p></div></div>
-          <span class="chip" id="r-chip"></span>
-        </div>
-        <div class="body">
-          <div class="issuer">
-            <div><div class="label">الجهة المصدرة</div><div class="val" id="r-issuer"></div></div>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M12 8v5M12 16h.01"/></svg>
-          </div>
-          <div class="subject">
-            <div class="label">موضوع الشهادة</div>
-            <div class="big" id="r-subject"></div>
-            <div class="small" id="r-type"></div>
-          </div>
-          <div class="grid">
-            <div><div class="label">رقم الملف</div><div class="val"><span class="mono" id="r-file"></span></div></div>
-            <div><div class="label">الرقم التسجيلي</div><div class="val"><span class="mono" id="r-reg"></span></div></div>
-            <div><div class="label">الرقم التسلسلي</div><div class="val"><span class="mono" id="r-serial"></span></div></div>
-            <div><div class="label">تاريخ الفحص</div><div class="val" id="r-inspect"></div></div>
-            <div><div class="label">تاريخ الإصدار</div><div class="val" id="r-issued"></div></div>
-            <div><div class="label">تاريخ الانتهاء</div><div class="val" id="r-expires"></div></div>
-            <div><div class="label">المعايير</div><div class="val"><span class="mono" id="r-std"></span></div></div>
-            <div><div class="label">الموقع</div><div class="val" id="r-loc"></div></div>
-          </div>
-          <div class="pair">
-            <div><div class="label">طالب الشهادة</div><div class="val" id="r-applicant"></div></div>
-            <div><div class="label">المصنّع / الوكيل</div><div class="val" id="r-maker"></div></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="result-missing" hidden aria-label="لم يتم العثور على الشهادة">
-        <div class="status bad">
-          <div class="status-main">
-            <div class="badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
-            <div><h2>لم يتم العثور على الشهادة</h2><p>الرقم المُدخل غير موجود في السجل</p></div>
-          </div>
-          <span class="chip" id="m-chip"></span>
-        </div>
-        <div class="notfound">تأكد من كتابة الرقم كما هو مطبوع على الشهادة، ثم حاول مرة أخرى. إذا استمرت المشكلة فتواصل مع الجهة المصدرة مباشرة.</div>
-      </section>
+  <section class="card" id="result-found" aria-label="نتيجة التحقق">
+    <div class="status" id="r-status">
+      <div class="status-main"><div class="badge" id="r-badge"></div><div><h2 id="r-title"></h2><p id="r-sub"></p></div></div>
+      <span class="chip" id="r-chip"></span>
     </div>
-  </main>
+    <div class="body">
+      <div class="issuer">
+        <div><div class="label">الجهة المصدرة</div><div class="val" id="r-issuer"></div></div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M12 8v5M12 16h.01"/></svg>
+      </div>
+      <div class="subject">
+        <div class="label">موضوع الشهادة</div>
+        <div class="big" id="r-subject"></div>
+        <div class="small" id="r-type"></div>
+      </div>
+      <div class="grid">
+        <div><div class="label">رقم الملف</div><div class="val"><span class="mono" id="r-file"></span></div></div>
+        <div><div class="label">الرقم التسجيلي</div><div class="val"><span class="mono" id="r-reg"></span></div></div>
+        <div><div class="label">الرقم التسلسلي</div><div class="val"><span class="mono" id="r-serial"></span></div></div>
+        <div><div class="label">تاريخ الفحص</div><div class="val" id="r-inspect"></div></div>
+        <div><div class="label">تاريخ الإصدار</div><div class="val" id="r-issued"></div></div>
+        <div><div class="label">تاريخ الانتهاء</div><div class="val" id="r-expires"></div></div>
+        <div><div class="label">المعايير</div><div class="val"><span class="mono" id="r-std"></span></div></div>
+        <div><div class="label">الموقع</div><div class="val" id="r-loc"></div></div>
+      </div>
+      <div class="pair">
+        <div><div class="label">طالب الشهادة</div><div class="val" id="r-applicant"></div></div>
+        <div><div class="label">المصنّع / الوكيل</div><div class="val" id="r-maker"></div></div>
+      </div>
+    </div>
+  </section>
 
+  <section class="card" id="result-missing" hidden aria-label="لم يتم العثور على الشهادة">
+    <div class="status bad">
+      <div class="status-main">
+        <div class="badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+        <div><h2>لم يتم العثور على الشهادة</h2><p>الرقم المُدخل غير موجود في السجل</p></div>
+      </div>
+      <span class="chip" id="m-chip"></span>
+    </div>
+    <div class="notfound">تأكد من كتابة الرقم كما هو مطبوع على الشهادة، ثم حاول مرة أخرى. إذا استمرت المشكلة فتواصل مع الجهة المصدرة مباشرة.</div>
+  </section>
 </div>
+
+</main>
 
 <button type="button" class="theme-btn" id="theme-btn">الوضع: تلقائي</button>
 
@@ -245,13 +499,16 @@
     /* ===== YOUR LOGO ===== path or URL of your logo. Leave empty for the placeholder. */
     var LOGO_SRC = 'logo.png';
     var $ = function (id) { return document.getElementById(id); };
-    var ISSUER = 'TÜV SÜD';
+    var ISSUER = 'TÜV SÜD ';
 
-    if (LOGO_SRC) {
-      var li = new Image(); li.alt = 'الشعار';
-      li.onload = function () { var s = $('logo-slot'); s.textContent = ''; s.appendChild(li); s.classList.add('filled'); };
-      li.src = LOGO_SRC;
+    function loadLogo(slotId) {
+      if (!LOGO_SRC) return;
+      var im = new Image(); im.alt = 'الشعار';
+      im.onload = function () { var s = $(slotId); s.textContent = ''; s.appendChild(im); s.classList.add('filled'); };
+      im.src = LOGO_SRC;
     }
+    loadLogo('logo-slot');
+    loadLogo('logo-slot-result');
 
     var db = null, user = null, isEditor = false, unsub = null, editingKey = null;
     var FIELDS = ['ref', 'subject', 'type', 'file', 'reg', 'serial', 'std', 'inspect', 'issued', 'expires', 'dims', 'loc', 'applicant', 'maker'];
@@ -272,6 +529,11 @@
       return new Date(expires + 'T00:00:00') < t ? 'expired' : 'valid';
     }
     function txt(id, v) { $(id).textContent = (v === undefined || v === null || v === '') ? '—' : v; }
+    /* An issuer that is empty or only blank/invisible characters falls back to the company name. */
+    function issuerOf(v) {
+      var s = (v === undefined || v === null) ? '' : String(v);
+      return s.replace(/[\s\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g, '') ? s.trim() : ISSUER;
+    }
 
     /* ---------- portal ---------- */
     var CHECK = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>';
@@ -279,6 +541,7 @@
 
     function showResult(shownRef, rec) {
       $('portal-lookup').hidden = true; $('portal-result').hidden = false;
+      document.body.classList.add('result-mode');
       txt('r-ref-top', shownRef);
       var found = $('result-found'), missing = $('result-missing');
       if (!rec) { found.hidden = true; missing.hidden = false; txt('m-chip', shownRef); window.scrollTo(0, 0); return; }
@@ -289,7 +552,7 @@
       txt('r-title', valid ? 'الشهادة صحيحة' : 'الشهادة منتهية الصلاحية');
       txt('r-sub', valid ? 'تم العثور على الشهادة في السجل' : 'الشهادة موجودة في السجل لكن مدتها انتهت');
       txt('r-chip', rec.ref);
-      txt('r-issuer', rec.issuer || ISSUER); txt('r-subject', rec.subject); txt('r-type', rec.type);
+      txt('r-issuer', issuerOf(rec.issuer)); txt('r-subject', rec.subject); txt('r-type', rec.type);
       txt('r-file', rec.file); txt('r-reg', rec.reg); txt('r-serial', rec.serial);
       $('r-inspect').textContent = fmt(rec.inspect); $('r-issued').textContent = fmt(rec.issued); $('r-expires').textContent = fmt(rec.expires);
       txt('r-std', rec.std); txt('r-loc', rec.loc);
@@ -334,13 +597,84 @@
       }).then(function () { $('lookup-btn').disabled = false; });
     }
 
-    $('lookup-form').addEventListener('submit', function (e) { e.preventDefault(); lookup($('ref-input').value); });
+    /* ---------- captcha (manual lookups only; QR links open the result directly) ---------- */
+    var captchaCode = '';
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+    var drawnW = 300;
+    function drawCaptcha() {
+      var cv = $('captcha'), W = cv.clientWidth || 300, H = 59, dpr = window.devicePixelRatio || 1, i;
+      drawnW = W;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      var c = cv.getContext('2d');
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+      c.lineCap = 'round';
+      var greys = ['#7a7a7a', '#8c8c8c', '#9d9d9d', '#aaaaaa', '#b8b8b8'];
+      function pen() { c.strokeStyle = greys[Math.floor(Math.random() * greys.length)]; c.lineWidth = rnd(1, 1.8); }
+      function line(x1, y1, x2, y2) { pen(); c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
+      function curve() {
+        pen(); c.beginPath(); c.moveTo(rnd(-10, W * 0.2), rnd(0, H));
+        c.quadraticCurveTo(rnd(W * 0.27, W * 0.73), rnd(-20, H + 20), rnd(W * 0.8, W + 10), rnd(0, H));
+        c.stroke();
+      }
+      /* long, gently slanted lines across the box */
+      for (i = 0; i < 7; i++) { var y = rnd(0, H); line(-5, y, W + 5, y + rnd(-26, 26)); }
+      /* shorter diagonals that cross them */
+      for (i = 0; i < 6; i++) {
+        var x0 = rnd(20, W - 20), y0 = rnd(0, H), a = rnd(-1.2, 1.2), len = rnd(50, 130);
+        line(x0, y0, x0 + Math.cos(a) * len, y0 + Math.sin(a) * len);
+      }
+      for (i = 0; i < 3; i++) curve();
+      /* letters: bold, small, each with its own tilt, height and stretch */
+      var n = captchaCode.length, pitch = 17, startX = W / 2 - (n - 1) * pitch / 2;
+      c.font = 'bold 26px Arial, Helvetica, sans-serif';
+      c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#1f1f1f';
+      for (i = 0; i < n; i++) {
+        c.save();
+        c.translate(startX + i * pitch + rnd(-1.5, 1.5), H / 2 + rnd(-4, 4));
+        c.rotate(rnd(-0.28, 0.28));
+        c.scale(rnd(0.9, 1.1), rnd(0.9, 1.15));
+        c.fillText(captchaCode.charAt(i), 0, 0);
+        c.restore();
+      }
+      /* a few lines over the letters */
+      for (i = 0; i < 3; i++) line(W / 2 - rnd(20, 65), rnd(10, H - 10), W / 2 + rnd(20, 65), rnd(10, H - 10));
+    }
+    function generateCaptcha() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      captchaCode = '';
+      for (var i = 0; i < 5; i++) captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+      drawCaptcha();
+    }
+    function resetCaptcha() { generateCaptcha(); $('captcha-input').value = ''; }
+    function speakCaptcha() {
+      if ('speechSynthesis' in window) {
+        var u = new SpeechSynthesisUtterance(captchaCode.split('').join(' '));
+        u.lang = 'en-US';
+        speechSynthesis.speak(u);
+      }
+    }
+    $('captcha-refresh').addEventListener('click', generateCaptcha);
+    $('captcha-speak').addEventListener('click', speakCaptcha);
+
+    $('lookup-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var entered = $('captcha-input').value.trim();
+      if (entered.toUpperCase() !== captchaCode) {
+        alert('Incorrect verification code. Please try again.');
+        resetCaptcha();
+        return;
+      }
+      lookup($('certificate').value).then(resetCaptcha);
+    });
     $('again-btn').addEventListener('click', function () {
-      $('portal-result').hidden = true; $('portal-lookup').hidden = false; $('ref-input').value = ''; $('ref-input').focus();
+      $('portal-result').hidden = true; $('portal-lookup').hidden = false;
+      document.body.classList.remove('result-mode');
+      $('certificate').value = ''; resetCaptcha(); $('certificate').focus();
       try { history.replaceState(null, '', '#'); } catch (e) {}
     });
 
-    /* ---------- theme ---------- */
+    /* ---------- theme (inner result page) ---------- */
     var btn = $('theme-btn'), modes = [null, 'light', 'dark'], names = { 'null': 'تلقائي', light: 'فاتح', dark: 'داكن' }, ti = 0;
     btn.addEventListener('click', function () {
       ti = (ti + 1) % modes.length; var m = modes[ti];
@@ -351,20 +685,16 @@
     /* ---------- boot ---------- */
     function route() {
       var h = (location.hash || '').replace(/^#/, '');
-      if (h) { var r = h.replace(/~/g, '/'); $('ref-input').value = r; lookup(r, true); }
+      if (h) { var r = h.replace(/~/g, '/'); $('certificate').value = r; lookup(r, true); }
     }
+    window.addEventListener('resize', function () {
+      var w = $('captcha').clientWidth;
+      if (!$('portal-lookup').hidden && w && w !== drawnW) drawCaptcha();
+    });
+    generateCaptcha();
     route();
     window.addEventListener('hashchange', route);
   })();
-
-var LOGO_SRC = 'logo.png';
-
-if (LOGO_SRC) {
-  var slot = document.getElementById('logo-slot');
-  var img = new Image();
-  img.alt = 'الشعار';
-  img.onload = function () { slot.textContent = ''; slot.appendChild(img); slot.classList.add('filled'); };
-  img.src = LOGO_SRC;
-}
-
 </script>
+</body>
+</html>
