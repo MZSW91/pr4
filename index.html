@@ -6,37 +6,6 @@
 <title>TÜV SÜD </title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
-<!-- ===== كشف التطبيق (APK) وتحويل إلى الصفحة الخاصة ===== -->
-<script>
-(function () {
-  function isRunningInApp() {
-    var ua = navigator.userAgent || navigator.vendor || window.opera || "";
-
-    // 1. وجود "wv" في User Agent (أشهر علامة لـ Android WebView)
-    if (/\bwv\b/.test(ua)) return true;
-
-    // 2. وجود كائن Android (كثير من تطبيقات HTML to APK تحقنه)
-    if (typeof Android !== "undefined" || typeof window.Android !== "undefined") return true;
-
-    // 3. يعمل من بروتوكول file:// (داخل الـ APK)
-    if (window.location.protocol === "file:") return true;
-
-    // 4. عدم وجود كائن chrome الكامل + أندرويد
-    if ((!window.chrome || !window.chrome.runtime) && /Android/i.test(ua)) return true;
-
-    // 5. متغيرات خاصة تحقنها بعض التطبيقات
-    if (window.HTMLToAPK || window.AppBridge || window.NativeApp) return true;
-
-    return false;
-  }
-
-  if (isRunningInApp()) {
-    // تحويل إلى صفحة الإدخال الخاصة بالتطبيق
-    window.location.replace("certificate-entry.html?source=app");
-  }
-})();
-</script>
-
 <style>
 /* ================= LOOKUP PAGE: identical to preview.html ================= */
 * {
